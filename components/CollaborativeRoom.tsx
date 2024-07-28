@@ -1,15 +1,18 @@
+'use client'
+import { ClientSideSuspense, RoomProvider } from '@liveblocks/react/suspense'
+import React from 'react'
 import { Editor } from '@/components/editor/Editor'
 import Header from '@/components/Header'
 import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs'
-import React from 'react'
-
-const Document = () => {
+const CollaborativeRoom = () => {
   return (
-    <div>
+     <RoomProvider id="my-room">
+    <ClientSideSuspense fallback={<div>Loading…</div>}>
+      <div className='collaborative-room'>
       <Header>
         <div className='flex w-fit items-center justify-cneter gap-2'>
           <p className='document-title'>
-            Share
+            This is a face document title
           </p>
 
         </div>
@@ -21,8 +24,10 @@ const Document = () => {
         </SignedIn>
       </Header>
       <Editor />
-    </div>
+      </div>
+    </ClientSideSuspense>
+  </RoomProvider>
   )
 }
 
-export default Document
+export default CollaborativeRoom
