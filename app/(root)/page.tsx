@@ -6,29 +6,74 @@ import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import React from 'react'
 import AddDocumentBtn from '@/components/AddDocumentBtn'
+import { getDocuments } from '@/lib/actions/room.actions'
+import Link from 'next/link'
+import { dateConverter } from '@/lib/utils'
+
 
 const Home = async () => {
   const clerkUser = await currentUser()
-  if(!clerkUser) redirect('/sign-in')
+  if (!clerkUser) redirect('/sign-in')
 
+  const roomDocs = await getDocuments(clerkUser.emailAddresses[0].emailAddress);
   const documents = []
   return (
     <main className='home-container'>
       <Header className="sticky left-0 top-0">
-      <div className='flex items-center gap-2 lg:gap:4'>
-Notification
-<SignedIn>
-  <UserButton />
-</SignedIn>
-</div>
+        <div className='flex items-center gap-2 lg:gap:4'>
+          Notification
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
       </Header>
-      {documents.length >0 ?(
+
+      {roomDocs.data.length > 0 ? (
+        <div className='document-list-container'>
+          <div className='document-list-title'>
+            <h3 className='text-28-semibold'>All documnets</h3>
+            <AddDocumentBtn
+              userId={clerkUser.id}
+              email={clerkUser.emailAddresses[0].emailAddress}
+            />
+          </div>
+          <ul className='document-ul'>
+            {roomDocs.data.map(({ id, metadata, createdAt }: any) => (
+              <li key={id} className='document-list-item'>
+                <Link href={`/documents/${id}`} className='flex flex-1 items-center gap-4'>
+                  <div className='hidden rounded-md bg-dark-500 p-2 sm:block'>
+                    <Image
+                      src="/assets/icons/doc.svg"
+                      alt='file'
+                      width={40}
+                      height={40}
+                    />
+                  </div>
+                  <div className='space-y-1'>
+                    <p className='line-clamp-1 text-lg'> {metadata.title}</p>
+                    <p className='text-sm font-light text-blue-100'>Created about {dateConverter(createdAt)}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div className='document-list-empty'>
+          <Image
+            src="/assets/icnons/doc.svg"
+            alt='Document' />
+
+        </div>
+      )}
+
+      {documents.length > 0 ? (
         <div>
 
         </div>
-      ):(
+      ) : (
         <div className='document-list-empty'>
-          <Image 
+          <Image
             src="assets/icons/doc.svg"
             alt='Document'
             width={40}
@@ -36,16 +81,16 @@ Notification
             className='mx-auto'
           />
 
-          <AddDocumentBtn 
+          <AddDocumentBtn
             userId={clerkUser.id}
             email={clerkUser.emailAddresses[0].emailAddress}
           />
         </div>
       )}
-      
 
-      </main>
-    
+
+    </main>
+
   )
 }
 
