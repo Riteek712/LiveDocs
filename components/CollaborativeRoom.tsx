@@ -10,8 +10,8 @@ import { updateDocument } from '@/lib/actions/room.actions'
 import Loader from './Loader'
 
 
-const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => {
-  const currentUserType = "Editor"
+const CollaborativeRoom = ({ roomId, roomMetadata, users, currentUserType }: CollaborativeRoomProps) => {
+ 
   const [editing, setEditing] = useState(false)
   const [docTitle, setDocTitle] = useState(roomMetadata.title)
   const [loading, setloading] = useState(false)
@@ -80,7 +80,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => 
                   <p className='document-title'>{docTitle}</p>
                 </>
               )}
-              {currentUserType === "Editor" && !editing && (
+              {currentUserType === "editor" && !editing && (
                 <Image
                   src="/assets/icons/edit.svg"
                   alt='edit'
@@ -92,7 +92,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => 
 
               )}
 
-              {currentUserType !== "Editor" && !editing && (
+              {currentUserType !== "editor" && !editing && (
                 <p className='view-only-tag'>View only</p>
               )}
               {loading && <p className="test-sm text-grey-400">saving...</p>}
@@ -104,7 +104,7 @@ const CollaborativeRoom = ({ roomId, roomMetadata }: CollaborativeRoomProps) => 
               <UserButton />
             </SignedIn>
           </Header>
-          <Editor />
+          <Editor  roomId={roomId} currentUserType={currentUserType} />
         </div>
       </ClientSideSuspense>
     </RoomProvider>
