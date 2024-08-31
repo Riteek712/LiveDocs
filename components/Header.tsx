@@ -13,6 +13,7 @@ const Header = ({children}: HeaderProps) => {
                 height={32}
                 className="hidden md:block"
             />
+            <p>by Riteek Rakesh</p>
             <Image 
                 src="/assets/icons/logo-icon.svg"
                 alt="logo"
